@@ -1,0 +1,27 @@
+sktime.transformers package
+===========================
+
+.. automodule:: sktime.transformers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+   sktime.transformers.dictionary_based
+
+Submodules
+----------
+
+.. toctree::
+
+   sktime.transformers.base
+   sktime.transformers.compose
+   sktime.transformers.forecasting
+   sktime.transformers.segment
+   sktime.transformers.shapelets
+   sktime.transformers.spectral_based
+   sktime.transformers.summarise

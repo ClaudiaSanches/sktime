@@ -1,0 +1,14 @@
+sktime.contrib.rotation\_forest package
+=======================================
+
+.. automodule:: sktime.contrib.rotation_forest
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   sktime.contrib.rotation_forest.rotation_forest_dev

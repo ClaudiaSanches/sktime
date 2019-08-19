@@ -1,0 +1,23 @@
+sktime.contrib package
+======================
+
+.. automodule:: sktime.contrib
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+   sktime.contrib.dictionary_based
+   sktime.contrib.distance_based
+   sktime.contrib.rotation_forest
+
+Submodules
+----------
+
+.. toctree::
+
+   sktime.contrib.experiments

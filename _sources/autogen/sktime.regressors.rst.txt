@@ -1,0 +1,14 @@
+sktime.regressors package
+=========================
+
+.. automodule:: sktime.regressors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   sktime.regressors.base

@@ -1,0 +1,7 @@
+sktime.utils.testing module
+===========================
+
+.. automodule:: sktime.utils.testing
+   :members:
+   :undoc-members:
+   :show-inheritance:

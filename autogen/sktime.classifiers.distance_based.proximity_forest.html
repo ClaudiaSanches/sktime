@@ -1,0 +1,718 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sktime.classifiers.distance_based.proximity_forest module &mdash; sktime  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sktime.classifiers.distance_based.time_series_neighbors module" href="sktime.classifiers.distance_based.time_series_neighbors.html" />
+    <link rel="prev" title="sktime.classifiers.distance_based.elastic_ensemble module" href="sktime.classifiers.distance_based.elastic_ensemble.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> sktime
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="sktime.html">sktime package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="sktime.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="sktime.classifiers.html">sktime.classifiers package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="sktime.classifiers.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sktime.classifiers.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.contrib.html">sktime.contrib package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.datasets.html">sktime.datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.distances.html">sktime.distances package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.experiments.html">sktime.experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.forecasters.html">sktime.forecasters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.highlevel.html">sktime.highlevel package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.metrics.html">sktime.metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.regressors.html">sktime.regressors package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.transformers.html">sktime.transformers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sktime.utils.html">sktime.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sktime.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extension.html">Extension Guidelines</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sktime</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="sktime.html">sktime package</a> &raquo;</li>
+        
+          <li><a href="sktime.classifiers.html">sktime.classifiers package</a> &raquo;</li>
+        
+          <li><a href="sktime.classifiers.distance_based.html">sktime.classifiers.distance_based package</a> &raquo;</li>
+        
+      <li>sktime.classifiers.distance_based.proximity_forest module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/autogen/sktime.classifiers.distance_based.proximity_forest.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="module-sktime.classifiers.distance_based.proximity_forest">
+<span id="sktime-classifiers-distance-based-proximity-forest-module"></span><h1>sktime.classifiers.distance_based.proximity_forest module<a class="headerlink" href="#module-sktime.classifiers.distance_based.proximity_forest" title="Permalink to this headline">¶</a></h1>
+<p>Proximity Forest time series classifier
+a decision tree forest which uses distance measures to partition data.
+B. Lucas and A. Shifaz, C. Pelletier, L. O’Neill, N. Zaidi, B. Goethals, F. Petitjean and G. Webb
+Proximity Forest: an effective and scalable distance-based classifier for time series,
+Data Mining and Knowledge Discovery, 33(3): 607-635, 2019</p>
+<dl class="class">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityForest">
+<em class="property">class </em><code class="sig-prename descclassname">sktime.classifiers.distance_based.proximity_forest.</code><code class="sig-name descname">ProximityForest</code><span class="sig-paren">(</span><em class="sig-param">random_state=None</em>, <em class="sig-param">n_trees=100</em>, <em class="sig-param">distance_measure=None</em>, <em class="sig-param">get_distance_measure=None</em>, <em class="sig-param">get_exemplars=&lt;function get_one_exemplar_per_class_proximity&gt;</em>, <em class="sig-param">get_gain=&lt;function gini_gain&gt;</em>, <em class="sig-param">verbosity=0</em>, <em class="sig-param">max_depth=inf</em>, <em class="sig-param">is_leaf=&lt;function pure&gt;</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">find_stump=&lt;function best_of_n_stumps.&lt;locals&gt;.find_best_stump&gt;</em>, <em class="sig-param">setup_distance_measure_getter=&lt;function setup_all_distance_measure_getter&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityForest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityForest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sktime.classifiers.base.html#sktime.classifiers.base.BaseClassifier" title="sktime.classifiers.base.BaseClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sktime.classifiers.base.BaseClassifier</span></code></a></p>
+<blockquote>
+<div><p>Proximity Forest class to model a decision tree forest which uses distance measures to
+partition data.</p>
+</div></blockquote>
+<p>&#64;article{lucas19proximity,</p>
+<blockquote>
+<div><p>title={Proximity Forest: an effective and scalable distance-based classifier for time series},
+author={B. Lucas and A. Shifaz and C. Pelletier and L. O’Neill and N. Zaidi and B. Goethals and F. Petitjean and G. Webb},
+journal={Data Mining and Knowledge Discovery},
+volume={33},
+number={3},
+pages={607–635},
+year={2019}
+}</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Attributes:</dt><dd><p>label_encoder: label encoder to change string labels to numeric indices
+<a href="#id7"><span class="problematic" id="id8">classes_</span></a>: unique list of classes
+random_state: the random state
+get_exemplars: function to extract exemplars from a dataframe and class value list
+setup_distance_measure_getter: function to setup the distance measure getters from dataframe and class value list
+get_distance_measure: distance measure getters
+distance_measure: distance measures
+get_gain: function to score the quality of a split
+verbosity: logging verbosity
+n_jobs: number of jobs to run in parallel <a href="#id1"><span class="problematic" id="id2">*</span></a>across threads”
+find_stump: function to find the best split of data
+max_depth: max tree depth
+X: train data
+y: train data labels
+trees: list of trees in the forest</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityForest.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">input_checks=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityForest.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityForest.fit" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>X<span class="classifier">array-like or sparse matrix of shape = [n_instances, n_columns]</span></dt><dd><p>The training input samples.  If a Pandas data frame is passed, column 0 is extracted.</p>
+</dd>
+<dt>y<span class="classifier">array-like, shape = [n_instances]</span></dt><dd><p>The class labels.</p>
+</dd>
+<dt>input_checks: boolean</dt><dd><p>whether to check the X and y parameters</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>self</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityForest.predict_proba">
+<code class="sig-name descname">predict_proba</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">input_checks=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityForest.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityForest.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find probability estimates for each class for all cases in X.
+:param X: The training input samples.</p>
+<blockquote>
+<div><p>If a Pandas data frame is passed (sktime format)
+If a Pandas data frame is passed, a check is performed that it only has one column.
+If not, an exception is thrown, since this classifier does not yet have
+multivariate capability.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_checks</strong> (<em>boolean</em>) – whether to check the X parameter</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array of shape = [n_instances, n_classes] of probabilities</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sktime.classifiers.distance_based.proximity_forest.CachedTransformer">
+<em class="property">class </em><code class="sig-prename descclassname">sktime.classifiers.distance_based.proximity_forest.</code><code class="sig-name descname">CachedTransformer</code><span class="sig-paren">(</span><em class="sig-param">transformer</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#CachedTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.CachedTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sktime.transformers.base.html#sktime.transformers.base.BaseTransformer" title="sktime.transformers.base.BaseTransformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">sktime.transformers.base.BaseTransformer</span></code></a></p>
+<p>Transformer container that transforms data and adds the transformed version to a cache.
+If the transformation is called again on already seen data the data is fetched
+from the cache rather than performing the expensive transformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>transformer</strong> (<em>the transformer to transform uncached data</em>) – </p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.CachedTransformer.cache">
+<code class="sig-name descname">cache</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.CachedTransformer.cache" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>location to store transforms seen before for fast look up</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.CachedTransformer.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#CachedTransformer.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.CachedTransformer.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>clear the cache</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.CachedTransformer.transform">
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#CachedTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.CachedTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit transformer, creating a cache for transformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>pandas DataFrame of shape</em><em> [</em><em>n_instances</em><em>, </em><em>n_features</em><em>]</em>) – Input data</p></li>
+<li><p><strong>y</strong> (<em>pandas Series</em><em>, </em><em>shape</em><em> (</em><em>n_instances</em><em>)</em><em>, </em><em>optional</em>) – Targets for supervised learning.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>cached_instances.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump">
+<em class="property">class </em><code class="sig-prename descclassname">sktime.classifiers.distance_based.proximity_forest.</code><code class="sig-name descname">ProximityStump</code><span class="sig-paren">(</span><em class="sig-param">random_state=None</em>, <em class="sig-param">get_exemplars=&lt;function get_one_exemplar_per_class_proximity&gt;</em>, <em class="sig-param">setup_distance_measure=&lt;function setup_all_distance_measure_getter&gt;</em>, <em class="sig-param">get_distance_measure=None</em>, <em class="sig-param">distance_measure=None</em>, <em class="sig-param">get_gain=&lt;function gini_gain&gt;</em>, <em class="sig-param">verbosity=0</em>, <em class="sig-param">n_jobs=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityStump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sktime.classifiers.base.html#sktime.classifiers.base.BaseClassifier" title="sktime.classifiers.base.BaseClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sktime.classifiers.base.BaseClassifier</span></code></a></p>
+<p>Proximity Stump class to model a decision stump which uses a distance measure to partition data.</p>
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.label_encoder">
+<code class="sig-name descname">label_encoder</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.label_encoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>label encoder to change string labels to numeric indices</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.y_exemplar">
+<code class="sig-name descname">y_exemplar</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.y_exemplar" title="Permalink to this definition">¶</a></dt>
+<dd><p>class label list of the exemplar instances</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.X_exemplar">
+<code class="sig-name descname">X_exemplar</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.X_exemplar" title="Permalink to this definition">¶</a></dt>
+<dd><p>dataframe of the exemplar instances</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.X_branches">
+<code class="sig-name descname">X_branches</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.X_branches" title="Permalink to this definition">¶</a></dt>
+<dd><p>dataframes for each branch, one per exemplar</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.y_branches">
+<code class="sig-name descname">y_branches</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.y_branches" title="Permalink to this definition">¶</a></dt>
+<dd><p>class label list for each branch, one per exemplar</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.classes_">
+<code class="sig-name descname">classes_</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>unique list of classes</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.entropy">
+<code class="sig-name descname">entropy</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>the gain associated with the split of data</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.random_state">
+<code class="sig-name descname">random_state</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.random_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>the random state</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.get_exemplars">
+<code class="sig-name descname">get_exemplars</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.get_exemplars" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to extract exemplars from a dataframe and class value list</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.setup_distance_measure">
+<code class="sig-name descname">setup_distance_measure</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.setup_distance_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to setup the distance measure getters from dataframe and class value list</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.get_distance_measure">
+<code class="sig-name descname">get_distance_measure</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.get_distance_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance measure getters</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.distance_measure">
+<code class="sig-name descname">distance_measure</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.distance_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance measures</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.get_gain">
+<code class="sig-name descname">get_gain</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.get_gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to score the quality of a split</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.verbosity">
+<code class="sig-name descname">verbosity</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>logging verbosity</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.n_jobs">
+<code class="sig-name descname">n_jobs</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.n_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of jobs to run in parallel <a href="#id3"><span class="problematic" id="id4">*</span></a>across threads”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.distance_to_exemplars">
+<code class="sig-name descname">distance_to_exemplars</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityStump.distance_to_exemplars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.distance_to_exemplars" title="Permalink to this definition">¶</a></dt>
+<dd><p>find distance to exemplars
+:param X: the dataset containing a list of instances
+:return: 2d numpy array of distances from each instance to each exemplar (instance by exemplar)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.find_closest_exemplar_indices">
+<code class="sig-name descname">find_closest_exemplar_indices</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityStump.find_closest_exemplar_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.find_closest_exemplar_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>find the closest exemplar index for each instance in a dataframe
+:param X: the dataframe containing instances
+:return: 1d numpy array of indices, one for each instance, reflecting the index of the closest exemplar</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">input_checks=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityStump.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.fit" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>X<span class="classifier">array-like or sparse matrix of shape = [n_instances, n_columns]</span></dt><dd><p>The training input samples.  If a Pandas data frame is passed, column 0 is extracted.</p>
+</dd>
+<dt>y<span class="classifier">array-like, shape = [n_instances]</span></dt><dd><p>The class labels.</p>
+</dd>
+<dt>input_checks: boolean</dt><dd><p>whether to check the X and y parameters</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>self</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.grow">
+<code class="sig-name descname">grow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityStump.grow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.grow" title="Permalink to this definition">¶</a></dt>
+<dd><p>grow the stump, creating branches for each exemplar
+:return: self</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityStump.predict_proba">
+<code class="sig-name descname">predict_proba</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">input_checks=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityStump.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityStump.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find probability estimates for each class for all cases in X.
+:param X: The training input samples.</p>
+<blockquote>
+<div><p>If a Pandas data frame is passed (sktime format)
+If a Pandas data frame is passed, a check is performed that it only has one column.
+If not, an exception is thrown, since this classifier does not yet have
+multivariate capability.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_checks</strong> (<em>boolean</em>) – whether to check the X parameter</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array of shape = [n_instances, num_classes] of probabilities</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree">
+<em class="property">class </em><code class="sig-prename descclassname">sktime.classifiers.distance_based.proximity_forest.</code><code class="sig-name descname">ProximityTree</code><span class="sig-paren">(</span><em class="sig-param">random_state=None</em>, <em class="sig-param">get_exemplars=&lt;function get_one_exemplar_per_class_proximity&gt;</em>, <em class="sig-param">distance_measure=None</em>, <em class="sig-param">get_distance_measure=None</em>, <em class="sig-param">setup_distance_measure=&lt;function setup_all_distance_measure_getter&gt;</em>, <em class="sig-param">get_gain=&lt;function gini_gain&gt;</em>, <em class="sig-param">max_depth=inf</em>, <em class="sig-param">is_leaf=&lt;function pure&gt;</em>, <em class="sig-param">verbosity=0</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">find_stump=&lt;function best_of_n_stumps.&lt;locals&gt;.find_best_stump&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sktime.classifiers.base.html#sktime.classifiers.base.BaseClassifier" title="sktime.classifiers.base.BaseClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sktime.classifiers.base.BaseClassifier</span></code></a></p>
+<p>Proximity Tree class to model a decision tree which uses distance measures to partition data.</p>
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.label_encoder">
+<code class="sig-name descname">label_encoder</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.label_encoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>label encoder to change string labels to numeric indices</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.classes_">
+<code class="sig-name descname">classes_</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>unique list of classes</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.random_state">
+<code class="sig-name descname">random_state</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.random_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>the random state</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.get_exemplars">
+<code class="sig-name descname">get_exemplars</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.get_exemplars" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to extract exemplars from a dataframe and class value list</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.setup_distance_measure">
+<code class="sig-name descname">setup_distance_measure</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.setup_distance_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to setup the distance measure getters from dataframe and class value list</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.get_distance_measure">
+<code class="sig-name descname">get_distance_measure</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.get_distance_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance measure getters</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.distance_measure">
+<code class="sig-name descname">distance_measure</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.distance_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance measures</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.get_gain">
+<code class="sig-name descname">get_gain</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.get_gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to score the quality of a split</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.verbosity">
+<code class="sig-name descname">verbosity</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>logging verbosity</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.n_jobs">
+<code class="sig-name descname">n_jobs</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.n_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of jobs to run in parallel <a href="#id5"><span class="problematic" id="id6">*</span></a>across threads”</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.find_stump">
+<code class="sig-name descname">find_stump</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.find_stump" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to find the best split of data</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.max_depth">
+<code class="sig-name descname">max_depth</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.max_depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>max tree depth</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.depth">
+<code class="sig-name descname">depth</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>current depth of tree, as each node is a tree itself, therefore can have a depth of &gt;=0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.X">
+<code class="sig-name descname">X</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.X" title="Permalink to this definition">¶</a></dt>
+<dd><p>train data</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.y">
+<code class="sig-name descname">y</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>train data labels</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.stump">
+<code class="sig-name descname">stump</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.stump" title="Permalink to this definition">¶</a></dt>
+<dd><p>the stump used to split data at this node</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.branches">
+<code class="sig-name descname">branches</code><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.branches" title="Permalink to this definition">¶</a></dt>
+<dd><p>the partitions of data driven by the stump</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">input_checks=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityTree.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.fit" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>X<span class="classifier">array-like or sparse matrix of shape = [n_instances, n_columns]</span></dt><dd><p>The training input samples.  If a Pandas data frame is passed, column 0 is extracted.</p>
+</dd>
+<dt>y<span class="classifier">array-like, shape = [n_instances]</span></dt><dd><p>The class labels.</p>
+</dd>
+<dt>input_checks: boolean</dt><dd><p>whether to check the X and y parameters</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>self</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sktime.classifiers.distance_based.proximity_forest.ProximityTree.predict_proba">
+<code class="sig-name descname">predict_proba</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">input_checks=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sktime/classifiers/distance_based/proximity_forest.html#ProximityTree.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sktime.classifiers.distance_based.proximity_forest.ProximityTree.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find probability estimates for each class for all cases in X.
+:param X: The training input samples.</p>
+<blockquote>
+<div><p>If a Pandas data frame is passed (sktime format)
+If a Pandas data frame is passed, a check is performed that it only has one column.
+If not, an exception is thrown, since this classifier does not yet have
+multivariate capability.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_checks</strong> (<em>boolean</em>) – whether to check the X parameter</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array of shape = [n_instances, n_classes] of probabilities</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sktime.classifiers.distance_based.time_series_neighbors.html" class="btn btn-neutral float-right" title="sktime.classifiers.distance_based.time_series_neighbors module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sktime.classifiers.distance_based.elastic_ensemble.html" class="btn btn-neutral float-left" title="sktime.classifiers.distance_based.elastic_ensemble module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, The Alan Turing Institute
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

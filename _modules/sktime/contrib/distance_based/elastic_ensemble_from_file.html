@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sktime.contrib.distance_based.elastic_ensemble_from_file &mdash; sktime  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> sktime
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autogen/sktime.html">sktime package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extension.html">Extension Guidelines</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">sktime</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>sktime.contrib.distance_based.elastic_ensemble_from_file</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sktime.contrib.distance_based.elastic_ensemble_from_file</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics.scorer</span> <span class="k">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sktime.contrib.experiments</span> <span class="k">import</span> <span class="n">write_results_to_uea_format</span>
+
+
+<div class="viewcode-block" id="ElasticEnsemblePostProcess"><a class="viewcode-back" href="../../../../autogen/sktime.contrib.distance_based.elastic_ensemble_from_file.html#sktime.contrib.distance_based.elastic_ensemble_from_file.ElasticEnsemblePostProcess">[docs]</a><span class="k">class</span> <span class="nc">ElasticEnsemblePostProcess</span><span class="p">:</span>
+    <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Jason Lines&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_path</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">,</span> <span class="n">distance_measures</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">resample_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            results_path: String - path to folder storing the results to be read into the ensemble</span>
+<span class="sd">            dataset_name: String - the name of the dataset that this ensemble will post process results for</span>
+<span class="sd">            distance_measures: &#39;all&#39; or list of Strings - default &#39;all&#39;. &#39;all&#39; sets classifier to use all default constiuent classifiers,</span>
+<span class="sd">                                else a list is provided of classifiers to include. Note these names must match the names of</span>
+<span class="sd">                                the subdirs in the folder located at results_parh</span>
+<span class="sd">            resample_id: default = 0 - to identify the determanistic seed used for resamplign experiments.</span>
+<span class="sd">                         A resampled_id of 0 demonstrates default train/test split were used to create results</span>
+<span class="sd">            alpha: float/double - default=1.0. Used to exponetiate the confidence of constituent classifiers when making test predictions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_path</span> <span class="o">=</span> <span class="n">results_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span> <span class="o">=</span> <span class="n">dataset_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resample_id</span> <span class="o">=</span> <span class="n">resample_id</span>
+        <span class="k">if</span> <span class="n">distance_measures</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dtw&#39;</span><span class="p">,</span><span class="s1">&#39;ddtw&#39;</span><span class="p">,</span><span class="s1">&#39;wdtw&#39;</span><span class="p">,</span><span class="s1">&#39;wddtw&#39;</span><span class="p">,</span><span class="s1">&#39;lcss&#39;</span><span class="p">,</span><span class="s1">&#39;erp&#39;</span><span class="p">,</span><span class="s1">&#39;msm&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span> <span class="o">=</span> <span class="n">distance_measures</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span>
+
+        <span class="c1"># load in train information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_accs_by_classifier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_dists_by_classifier</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_dists_by_classifier</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ee_train_dists</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ee_test_dists</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">actual_train_class_vals</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actual_test_class_vals</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">num_classes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">num_ins</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">class_vals</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># load train</span>
+
+        <span class="k">for</span> <span class="n">c_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">)):</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_path</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">[</span><span class="n">c_id</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;/Predictions/&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="o">+</span><span class="s2">&quot;/trainFold&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_id</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;.csv&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                <span class="n">third_line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">train_accs_by_classifier</span><span class="p">[</span><span class="n">c_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">third_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">this_class_vals</span> <span class="o">=</span> <span class="n">third_line</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                <span class="n">this_num_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_class_vals</span><span class="p">)</span>
+                <span class="n">this_num_ins</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="o">-</span><span class="mi">3</span>
+                <span class="k">if</span> <span class="n">class_vals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">class_vals</span> <span class="o">=</span> <span class="n">this_class_vals</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">this_class_vals</span><span class="p">)</span>
+                    <span class="n">num_classes</span> <span class="o">=</span> <span class="n">this_num_classes</span>
+                    <span class="n">num_ins</span> <span class="o">=</span> <span class="n">this_num_ins</span>
+
+                <span class="k">elif</span> <span class="n">this_class_vals</span> <span class="o">!=</span> <span class="n">class_vals</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Class value mismatch when loading train file for &quot;</span>
+                                     <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">[</span><span class="n">c_id</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot; and &quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">this_num_ins</span> <span class="o">!=</span> <span class="n">num_ins</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inconsistent number of predictions in constituent training files: first spotted &quot;</span>
+                                     <span class="s2">&quot;in train file for &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">[</span><span class="n">c_id</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot; and &quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)</span>
+
+                <span class="n">this_dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">num_ins</span><span class="p">,</span><span class="n">num_classes</span><span class="p">))</span>
+                <span class="n">this_actual_train_class_vals</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_ins</span><span class="p">):</span>
+                    <span class="n">split_line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                    <span class="n">this_actual_train_class_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">):</span>
+                        <span class="n">this_dists</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="n">c</span><span class="o">+</span><span class="mi">3</span><span class="p">]),</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">train_accs_by_classifier</span><span class="p">[</span><span class="n">c_id</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">actual_train_class_vals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">actual_train_class_vals</span> <span class="o">=</span> <span class="n">this_actual_train_class_vals</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">actual_train_class_vals</span> <span class="o">!=</span> <span class="n">this_actual_train_class_vals</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Class values in files no not match for train - first spotted for &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">[</span><span class="n">c_id</span><span class="p">]))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ee_train_dists</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ee_train_dists</span> <span class="o">=</span> <span class="n">this_dists</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ee_train_dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ee_train_dists</span><span class="p">,</span><span class="n">this_dists</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_dists_by_classifier</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_dists</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ee_train_dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ee_train_dists</span><span class="p">,</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_accs_by_classifier</span><span class="p">))</span>
+
+        <span class="c1"># load test</span>
+        <span class="n">num_test_ins</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">c_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">)):</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_path</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">[</span><span class="n">c_id</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Predictions/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span> <span class="o">+</span> <span class="s2">&quot;/testFold&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                <span class="n">third_line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                <span class="n">this_class_vals</span> <span class="o">=</span> <span class="n">third_line</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                <span class="n">this_num_ins</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span>
+                <span class="k">if</span> <span class="n">this_class_vals</span> <span class="o">!=</span> <span class="n">class_vals</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Class value mismatch when loading test file for &quot;</span>
+                                     <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">[</span><span class="n">c_id</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot; and &quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">num_test_ins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">num_test_ins</span> <span class="o">=</span> <span class="n">this_num_ins</span>
+                <span class="k">elif</span> <span class="n">num_test_ins</span> <span class="o">!=</span> <span class="n">this_num_ins</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inconsistent number of predictions in constituent test files: first spotted &quot;</span>
+                                     <span class="s2">&quot;in train file for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">[</span><span class="n">c_id</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; and &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)</span>
+                <span class="n">this_dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">num_ins</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">))</span>
+                <span class="n">this_actual_test_class_vals</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_ins</span><span class="p">):</span>
+                    <span class="n">split_line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                    <span class="n">this_actual_test_class_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">):</span>
+                        <span class="n">this_dists</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="n">c</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_accs_by_classifier</span><span class="p">[</span><span class="n">c_id</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">actual_test_class_vals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">actual_test_class_vals</span> <span class="o">=</span> <span class="n">this_actual_test_class_vals</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">actual_test_class_vals</span> <span class="o">!=</span> <span class="n">this_actual_test_class_vals</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Class values in files no not match for test - first spotted for &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">[</span><span class="n">c_id</span><span class="p">]))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ee_test_dists</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ee_test_dists</span> <span class="o">=</span> <span class="n">this_dists</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ee_test_dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ee_test_dists</span><span class="p">,</span> <span class="n">this_dists</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_dists_by_classifier</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_dists</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ee_test_dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ee_test_dists</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_accs_by_classifier</span><span class="p">))</span>
+
+<div class="viewcode-block" id="ElasticEnsemblePostProcess.write_files"><a class="viewcode-back" href="../../../../autogen/sktime.contrib.distance_based.elastic_ensemble_from_file.html#sktime.contrib.distance_based.elastic_ensemble_from_file.ElasticEnsemblePostProcess.write_files">[docs]</a>    <span class="k">def</span> <span class="nf">write_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_results_path</span><span class="p">,</span> <span class="n">output_classifier_name</span><span class="o">=</span><span class="s2">&quot;EE&quot;</span><span class="p">,</span> <span class="n">write_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">write_test</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_results_path: String - path to where output results will be written</span>
+<span class="sd">            output_classifier_name: String - the name of the composite ensmeble classifier in the output files</span>
+<span class="sd">            write_train: boolean - true will write train files for the ensemble, false will skip training files</span>
+<span class="sd">            write_test: boolean - true will write test files for the ensemble, false will skip test files</span>
+<span class="sd">            overwrite: boolean - if true, any existing train/test files will be over-written. False prevents file overwriting</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">write_train</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">write_test</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train and test writing both set to false - method will terminate without doing anything&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">write_train</span><span class="p">:</span>
+                <span class="n">full_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_results_path</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_classifier_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/Predictions/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/trainFold&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">full_path</span> <span class="o">+</span> <span class="s2">&quot; already exists and overwrite set to false, not writing Train&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
+                    <span class="n">write_train</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="n">write_test</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">full_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_results_path</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_classifier_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/Predictions/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/testFold&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">full_path</span> <span class="o">+</span> <span class="s2">&quot; already exists and overwrite set to false, not writing Test&quot;</span><span class="p">)</span>
+                    <span class="n">write_test</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">write_train</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">write_test</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train and test files both already exist and overwrite set to false - method will terminate without doing anything&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        file_format = None</span>
+<span class="sd">        if os.path.exists(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name+ &#39;_TRAIN.ts&#39;) and os.path.exists(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name+ &#39;_TEST.ts&#39;):</span>
+<span class="sd">            train_x, train_y = loader.load_from_tsfile_to_dataframe(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name + &#39;_TRAIN.ts&#39;)</span>
+<span class="sd">            test_x, test_y = loader.load_from_tsfile_to_dataframe(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name + &#39;_TEST.ts&#39;)</span>
+<span class="sd">        elif os.path.exists(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name+ &#39;_TRAIN.arff&#39;) and os.path.exists(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name+ &#39;_TEST.arff&#39;):</span>
+<span class="sd">            train_x, train_y = loader.load_from_arff_to_dataframe(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name + &#39;_TRAIN.ts&#39;)</span>
+<span class="sd">            test_x, test_y = loader.load_from_arff_to_dataframe(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name + &#39;_TEST.ts&#39;)</span>
+<span class="sd">        elif os.path.exists(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name + &#39;_TRAIN.tsv&#39;) and os.path.exists(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name + &#39;_TEST.tsv&#39;):</span>
+<span class="sd">            train_x, train_y = loader.load_from_ucr_tsv_to_dataframe(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name + &#39;_TRAIN.ts&#39;)</span>
+<span class="sd">            test_x, test_y = loader.load_from_ucr_tsv_to_dataframe(problem_path + self.dataset_name + &#39;/&#39; + self.dataset_name + &#39;_TEST.ts&#39;)</span>
+<span class="sd">        else:</span>
+<span class="sd">            raise ValueError(&quot;No dataset found for &quot;+self.dataset_name)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">write_train</span><span class="p">:</span>
+            <span class="n">train_probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ee_train_dists</span>
+            <span class="n">train_preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">train_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actual_train_class_vals</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">)</span>
+            <span class="n">second</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">)</span>
+            <span class="n">third</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,NA,NA,-1,-1,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+            <span class="n">write_results_to_uea_format</span><span class="p">(</span><span class="n">second_line</span><span class="o">=</span><span class="n">second</span><span class="p">,</span> <span class="n">third_line</span><span class="o">=</span><span class="n">third</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="n">output_results_path</span><span class="p">,</span> <span class="n">classifier_name</span><span class="o">=</span><span class="n">output_classifier_name</span><span class="p">,</span> <span class="n">resample_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_id</span><span class="p">,</span>
+                                        <span class="n">predicted_class_vals</span><span class="o">=</span><span class="n">train_preds</span><span class="p">,</span> <span class="n">actual_probas</span><span class="o">=</span><span class="n">train_probs</span><span class="p">,</span> <span class="n">dataset_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">actual_class_vals</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">actual_train_class_vals</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s1">&#39;TRAIN&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">write_test</span><span class="p">:</span>
+            <span class="n">test_probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ee_test_dists</span>
+            <span class="n">test_preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">test_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actual_test_class_vals</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">)</span>
+            <span class="n">second</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_measures</span><span class="p">)</span>
+            <span class="n">third</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,NA,NA,-1,-1,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+            <span class="n">write_results_to_uea_format</span><span class="p">(</span><span class="n">second_line</span><span class="o">=</span><span class="n">second</span><span class="p">,</span> <span class="n">third_line</span><span class="o">=</span><span class="n">third</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="n">output_results_path</span><span class="p">,</span> <span class="n">classifier_name</span><span class="o">=</span><span class="n">output_classifier_name</span><span class="p">,</span> <span class="n">resample_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_id</span><span class="p">,</span>
+                                        <span class="n">predicted_class_vals</span><span class="o">=</span><span class="n">test_preds</span><span class="p">,</span> <span class="n">actual_probas</span><span class="o">=</span><span class="n">test_probs</span><span class="p">,</span> <span class="n">dataset_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">actual_class_vals</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">actual_test_class_vals</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s1">&#39;TEST&#39;</span><span class="p">)</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, The Alan Turing Institute
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
