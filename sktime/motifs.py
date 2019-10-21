@@ -1,8 +1,5 @@
 import numpy as np
 
-import numpy as np
-
-
 def sliding_dot_products(q, t, q_len, t_len):
     """
         Computes the sliding dot products between a query and a time series.
